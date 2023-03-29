@@ -6,7 +6,7 @@
 /*   By: gussoare <gussoare@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/29 11:34:37 by gussoare          #+#    #+#             */
-/*   Updated: 2023/03/29 15:50:39 by gussoare         ###   ########.fr       */
+/*   Updated: 2023/03/29 16:29:15 by gussoare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ void	handle_keys(t_game *game)
 	float		speed;
 
 	keys = game->keys;
-	speed = 0.5;
+	speed = 0.25;
 	if (keys->w != keys->s)
 	{
 		if (keys->w == 1)
@@ -108,9 +108,9 @@ void	handle_keys(t_game *game)
 	if (keys->right != keys->left)
 	{
 		if (keys->right == 1)
-			camera_movement(RIGHT_KEY, game, speed);
+			camera_movement(RIGHT_KEY, game, speed/2);
 		else if (keys->left == 1)
-			camera_movement(LEFT_KEY, game, speed);
+			camera_movement(LEFT_KEY, game, speed/2);
 	}
 }
 
