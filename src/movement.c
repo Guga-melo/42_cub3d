@@ -6,7 +6,7 @@
 /*   By: gussoare <gussoare@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/29 11:34:37 by gussoare          #+#    #+#             */
-/*   Updated: 2023/03/29 12:25:56 by gussoare         ###   ########.fr       */
+/*   Updated: 2023/03/29 15:50:39 by gussoare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,17 +42,17 @@ void horizontal_movement(int key, t_game *game, double speed)
 	ray = game->ray;
 	if (key == D_KEY)
 	{
-		if (game->map->map[(int)(pl->pl_x + ray->plane_x *speed)][(int)pl->pl_y] == '0')
-			pl->pl_x += ray->plane_x *speed;
+		if (game->map->map[(int)(pl->pl_x + ray->plane_x * speed)][(int)pl->pl_y] == '0')
+			pl->pl_x += ray->plane_x * speed;
 		if (game->map->map[(int)pl->pl_x][(int)(pl->pl_y + ray->plane_y *speed)] == '0')
-			pl->pl_y += ray->plane_y *speed;
+			pl->pl_y += ray->plane_y * speed;
     }
 	else if (key == A_KEY)
 	{
 		if (game->map->map[(int)(pl->pl_x - ray->plane_x *speed)][(int)pl->pl_y] == '0')
 			pl->pl_x -= ray->plane_x *speed;
 		if (game->map->map[(int)pl->pl_x][(int)(pl->pl_y - ray->plane_y *speed)] == '0')
-			pl->pl_y -= ray->plane_y *speed;
+			pl->pl_y -= ray->plane_y * speed;
 	}
 }
 
@@ -69,7 +69,7 @@ void	camera_movement(int key, t_game *game, double speed)
       	pl->pldir_x = pl->pldir_x * cos(speed) - pl->pldir_y * sin(speed);
       	pl->pldir_y = pl->old_pldir_x * sin(speed) + pl->pldir_y * cos(speed);
       	ray->old_plane_x = ray->plane_x;
-      	ray->plane_x = ray->plane_x * cos(speed)- ray->plane_y * sin(speed)* 0.;
+      	ray->plane_x = ray->plane_x * cos(speed)- ray->plane_y * sin(speed);
      	ray->plane_y = ray->old_plane_x * sin(speed) + ray->plane_y * cos(speed);
 	}
 	else if (key == LEFT_KEY)
@@ -90,7 +90,7 @@ void	handle_keys(t_game *game)
 	float		speed;
 
 	keys = game->keys;
-	speed = 1;
+	speed = 0.5;
 	if (keys->w != keys->s)
 	{
 		if (keys->w == 1)

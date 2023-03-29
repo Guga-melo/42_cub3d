@@ -6,7 +6,7 @@
 /*   By: gussoare <gussoare@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/21 09:15:23 by gussoare          #+#    #+#             */
-/*   Updated: 2023/03/29 12:00:53 by gussoare         ###   ########.fr       */
+/*   Updated: 2023/03/29 15:47:50 by gussoare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,36 +16,32 @@ void	ver_line(int x, t_game *game)
 {
 	t_raycast	*ray;
 	int			color;
-	int 		ceiling;
-	int	ceiling_color;
+	int i = -1;
 
 	ray = game->ray;
 
-	ceiling = ray->draw_start;
-	ceiling_color = ray->draw_end;
-	while (--ceiling >= 0)
-	{
-		mlx_pixel_put(game->mlx, game->mlx_win, \
-				x, ceiling, ceiling_color++);
-	}
 	if (game->map->map[ray->map_x][ray->map_y] == '1')
 		color = 0x40E0D0;
 	if (game->map->map[ray->map_x][ray->map_y] == '2')
 		color = 0xFF5555;
-	while (ray->draw_start < ray->draw_end)
+	if (ray->side == 1)
+		color = color / 2;
+	while (++i <= game->height)
 	{
-		if (ray->side == 1)
+		if (i < ray->draw_start)
 			mlx_pixel_put(game->mlx, game->mlx_win, \
-				x, ray->draw_start, color / 2);
+				x, i, 0x108ED2);
+		else if (i >= ray->draw_start && i <= ray->draw_end)
+			mlx_pixel_put(game->mlx, game->mlx_win, \
+				x, i, color);
 		else
 			mlx_pixel_put(game->mlx, game->mlx_win, \
-				x, ray->draw_start, color);
-		ray->draw_start++;
+				x, i, 0xffe3ab);
 	}
-	ray->draw_end--;
-	while (++ray->draw_end <= 480)
-		mlx_pixel_put(game->mlx, game->mlx_win, \
-				x, ray->draw_end, 0xffe3ab);
+	//ray->draw_end--;
+	//while (++ray->draw_end <= 480)
+		//mlx_pixel_put(game->mlx, game->mlx_win, 
+		//		x, ray->draw_end, 0xffe3ab);
 }
 
 void	raycasting(t_game *game)
