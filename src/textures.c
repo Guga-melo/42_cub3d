@@ -6,7 +6,7 @@
 /*   By: gussoare <gussoare@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/29 11:42:08 by gussoare          #+#    #+#             */
-/*   Updated: 2023/03/29 11:42:17 by gussoare         ###   ########.fr       */
+/*   Updated: 2023/04/10 11:56:06 by gussoare         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char	*check_line(char *line)
 	int		i;
 	int		j;
 
-	new_line = malloc(sizeof(char) * 8);
+	new_line = malloc(sizeof(char) * 9);
 	i = -1;
 	j = -1;
 	while (line[++i])
@@ -38,29 +38,25 @@ char	**get_hex_color(int fd)
 	char	**hex_color;
 	char	*line;
 	char	*hex_line;
-	char	*aux;
 
 	hex_line = ft_strdup("");
 	line = get_next_line(fd);
 	while (line)
 	{
-		if (!ft_strncmp(line, "\"  c #000000\",", 14))
+		if (!ft_strncmp(line, "/* columns rows colors chars-per-pixel */", 41))
 		{
+			free(line);
+			line = get_next_line(fd);
+			free(line);
+			line = get_next_line(fd);
 			while (ft_strncmp(line, "/* pixels */", 12))
-			{
-				line = check_line(line);
-				aux = ft_strjoin(hex_line, line);
-				free(hex_line);
-				hex_line = ft_strdup(aux);
-				free(aux);
-				free(line);
-				line = get_next_line(fd);
-			}
+				getting_hex_colors(&line, &hex_line, fd);
 			break ;
 		}
 		free(line);
 		line = get_next_line(fd);
 	}
+	free(line);
 	hex_color = ft_split(hex_line, '\n');
 	free(hex_line);
 	return (hex_color);
@@ -91,10 +87,22 @@ char	*check_texture_line(char *line)
 	return (new_line);
 }
 
+void	joining_lines(char **line, char **buffer, int fd)
+{
+	char	*aux;
+
+	*line = check_texture_line(*line);
+	aux = ft_strjoin(*buffer, *line);
+	free(*buffer);
+	*buffer = ft_strdup(aux);
+	free(aux);
+	free(*line);
+	*line = get_next_line(fd);
+}
+
 char	**get_texture_line(int fd)
 {
 	char	*line;
-	char	*aux;
 	char	*buffer;
 	char	**texture_line;
 
@@ -107,15 +115,7 @@ char	**get_texture_line(int fd)
 			free(line);
 			line = get_next_line(fd);
 			while (ft_strncmp(line, "};", 2))
-			{
-				line = check_texture_line(line);
-				aux = ft_strjoin(buffer, line);
-				free(buffer);
-				buffer = ft_strdup(aux);
-				free(aux);
-				free(line);
-				line = get_next_line(fd);
-			}
+				joining_lines(&line, &buffer, fd);
 			break ;
 		}
 		free(line);
@@ -125,38 +125,4 @@ char	**get_texture_line(int fd)
 	texture_line = ft_split(buffer, '\n');
 	free(buffer);
 	return (texture_line);
-}
-
-int	**convert_texture(char **texture_line, char **hex_color)
-{
-	int		**texture;
-	char	*texture_char;
-	char	**buffer;
-	int		i;
-	int		j;
-
-	i = -1;
-	texture = malloc(sizeof(int *) * 64);
-	buffer = hex_color;
-	while (*texture_line)
-	{
-		texture[++i] = malloc(sizeof(int) * 64);
-		texture_char = *texture_line;
-		j = -1;
-		while (*texture_char)
-		{
-			if (j < 63)
-				j++;
-			hex_color = buffer;
-			while (*hex_color)
-			{
-				if (*texture_char == *hex_color[0])
-					texture[i][j] = ft_atoi_base(&(*hex_color)[1], 16);
-				hex_color++;
-			}
-			texture_char++;
-		}
-		texture_line++;
-	}
-	return (texture);
 }
